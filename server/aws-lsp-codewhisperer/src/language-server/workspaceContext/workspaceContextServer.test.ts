@@ -2,18 +2,23 @@ import { InitializeParams, Server } from '@aws/language-server-runtimes/server-i
 import { TestFeatures } from '@aws/language-server-runtimes/testing'
 import sinon from 'ts-sinon'
 import { WorkspaceContextServer } from './workspaceContextServer'
+import { AmazonQTokenServiceManager } from '../../shared/amazonQServiceManager/AmazonQTokenServiceManager'
 
 describe('WorkspaceContext Server', () => {
     let features: TestFeatures
     let server: Server
+    let disposeServer: () => void
 
     before(() => {
         features = new TestFeatures()
         server = WorkspaceContextServer()
+        disposeServer = server(features)
     })
 
     afterEach(() => {
         sinon.restore()
+        disposeServer()
+        features.dispose()
     })
 
     describe('Initialization', () => {
